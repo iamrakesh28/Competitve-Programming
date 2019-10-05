@@ -5,6 +5,9 @@ using namespace std;
 int main() {
 
 	long long d, arr[4];
+	//int a = 0b1000;
+	//cout<<a<<endl;
+	//return 0;
 	cin>>arr[0]>>arr[1]>>arr[2]>>d;
 	sort(arr, arr + 3);
 	long long cnt1 = 0, cnt2 = 0;
