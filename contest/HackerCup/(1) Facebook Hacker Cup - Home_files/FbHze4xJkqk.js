@@ -1,0 +1,3 @@
+if (self.CavalryLogger) { CavalryLogger.start_js(["6nVEH"]); }
+
+__d("FDSGlimmer.react",["FDSPrivateThemeContext.react","LoadingMarker.react","React","makeFDSStandardComponent","stylex"],(function(a,b,c,d,e,f){"use strict";__p&&__p();var g=b("React").useContext;function a(a){var c=a["data-testid"],d=a.height;a=a.width;return b("React").createElement(b("LoadingMarker.react"),null,b("React").createElement("div",{className:"hmxda3hc i5sd8p07 beitvgnf g18ehb1t oh05ja7p a2442nc3 bebv1af3 cpje1fs3 iu38h1v7 iavxdeu1 nzewr7rv","data-testid":c,style:babelHelpers["extends"]({},h(),{height:d,width:a})}))}function h(){var a=g(b("FDSPrivateThemeContext.react"));return{borderRadius:a.borderRadius.container}}e.exports=b("makeFDSStandardComponent")("FDSGlimmer",a)}),null);

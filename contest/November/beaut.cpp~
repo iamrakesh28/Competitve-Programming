@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 100;
+int dp[N][81 * N + 1][9];
+
+void solve(int i, int sum) {
+  if (i == 0) {
+    if (sum == 0)
+      if (dp[0][0][0] == -1)
+	for (int j = 0; j < 9; ++j)
+	  dp[0][0][j] = 0;
+    return;
+  }
+  if (sum <= 0)
+    return;
+  if (dp[i][sum][0] == -1) {
+    for (int j = 1; j <= 9; ++j) {
+      solve(i - 1, sum - j * j);
+      if (dp[i - 1][sum - j * j][0] != -1) {
+	for (int k = 0; k < 9; ++k)
+	  dp[i][sum][k] = dp[i - 1][sum - j * j][k];
+	dp[i][sum][j - 1]++;
+	break;
+      }
+    }
+  }
+  return;
+}
+
+int main() {
+  memset(dp, -1, sizeof dp);
+  return 0;
+}

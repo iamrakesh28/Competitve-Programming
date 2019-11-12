@@ -1,0 +1,4 @@
+if (self.CavalryLogger) { CavalryLogger.start_js(["Pf0BF"]); }
+
+__d("BigPipePageletRootStatusLogger",["BanzaiODS"],(function(a,b,c,d,e,f){"use strict";__p&&__p();var g=!1;a={init:function(a){__p&&__p();if(g===!0)return;g=!0;b("BanzaiODS").setEntitySample("bigpipe.pagelet_root_element",a);function c(a,c){b("BanzaiODS").bumpEntityKey("bigpipe.pagelet_root_element",c+"."+a)}a=window.__logBigPipePageletRootStatus;window.__logBigPipePageletRootStatus=c;if(a!=null&&typeof a.getLogs==="function"){a=a.getLogs();a.forEach(function(a){var b=a[0];a=a[1];return c(b,a)})}}};e.exports=a}),null);
+__d("react-router",["react-router-4.3.1"],(function(a,b,c,d,e,f){e.exports=b("react-router-4.3.1")()}),null);

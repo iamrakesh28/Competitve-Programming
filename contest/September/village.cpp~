@@ -1,0 +1,46 @@
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+const int N = 1e5;
+int b[N];
+long long dp[N][3];
+list <int> adj[N];
+
+void dfs(int u, int p) {
+
+  dp[u][0] = 0;
+  dp[u][1] = b[u];
+  dp[u][2] = b[u];
+  for (int v : adj[u]) {
+     if (v != p)
+       dfs(v, u);
+  }
+  for (int v : adj[u]) {
+    if (v != p) {
+      dp[u][0] += max(dp[v][1], dp[v][2]);
+      dp[u][2] += max(max(dp[v][1], dp[v][2]), dp[v][0] + b[v]);
+    }
+  }
+}
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  for (int i = 0; i < q; ++i) {
+    int v;
+    scanf("%d", &v);
+    for (int j = 0; j < v; ++j)
+      scanf("%d", b + j);
+    for (int j = 0; j < v - 1; ++j) {
+      int u, v;
+      scanf("%d%d", &u, &v);
+      adj[u - 1].push_back(v - 1);
+      adj[v - 1].push_back(u - 1);
+    }
+    for (int j = 0; j < v; ++j)
+      adj[j].clear();
+  }
+  return 0;
+}
