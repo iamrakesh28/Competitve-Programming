@@ -1,0 +1,596 @@
+//1.  Linear Diophantine
+
+int gcd(int a, int b, int &x, int &y) {
+    if (a == 0) {
+        x = 0; y = 1;
+        return b;
+    }
+    int x1, y1;
+    int d = gcd(b%a, a, x1, y1);
+    x = y1 - (b / a) * x1;
+    y = x1;
+    return d;
+}
+
+bool find_any_solution(int a, int b, int c, int &x0, int &y0, int &g) {
+    g = gcd(abs(a), abs(b), x0, y0);
+    if (c % g) {
+        return false;
+    }
+
+    x0 *= c / g;
+    y0 *= c / g;
+    if (a < 0) x0 = -x0;
+    if (b < 0) y0 = -y0;
+    return true;
+}
+
+// 2. Sieve of Eratosthene
+
+vector<char> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
+    }
+}
+
+// 3. Euler Theorem
+int phi(int n) {
+    int result = n;
+    for (int i = 2; i * i <= n; i++) {
+        if(n % i == 0) {
+            while(n % i == 0)
+                n /= i;
+            result -= result / i;
+        }
+    }
+    if(n > 1)
+        result -= result / n;
+    return result;
+}
+
+// 4. Sparse table
+
+int log[MAXN+1];
+log[1] = 0;
+for (int i = 2; i <= MAXN; i++)
+    log[i] = log[i/2] + 1;
+
+int st[MAXN][K];
+
+for (int i = 0; i < N; i++)
+    st[i][0] = array[i];
+
+for (int j = 1; j <= K; j++)
+    for (int i = 0; i + (1 << j) <= N; i++)
+        st[i][j] = min(st[i][j-1], st[i + (1 << (j - 1))][j - 1]);
+
+
+//5. Fenwick
+
+struct FenwickTree {
+    vector<int> bit;  // binary indexed tree
+    int n;
+
+    FenwickTree(int n) {
+        this->n = n;
+        bit.assign(n, 0);
+    }
+
+    FenwickTree(vector<int> a) : FenwickTree(a.size()) {
+        for (size_t i = 0; i < a.size(); i++)
+            add(i, a[i]);
+    }
+
+    int sum(int r) {
+        int ret = 0;
+        for (; r >= 0; r = (r & (r + 1)) - 1)
+            ret += bit[r];
+        return ret;
+    }
+
+    int sum(int l, int r) {
+        return sum(r) - sum(l - 1);
+    }
+
+    void add(int idx, int delta) {
+        for (; idx < n; idx = idx | (idx + 1))
+            bit[idx] += delta;
+    }
+};
+
+// 6. Segment Tree
+
+pair<int, int> t[4*MAXN];
+
+pair<int, int> combine(pair<int, int> a, pair<int, int> b) {
+    if (a.first > b.first) 
+        return a;
+    if (b.first > a.first)
+        return b;
+    return make_pair(a.first, a.second + b.second);
+}
+
+void build(int a[], int v, int tl, int tr) {
+    if (tl == tr) {
+        t[v] = make_pair(a[tl], 1);
+    } else {
+        int tm = (tl + tr) / 2;
+        build(a, v*2, tl, tm);
+        build(a, v*2+1, tm+1, tr);
+        t[v] = combine(t[v*2], t[v*2+1]);
+    }
+}
+
+pair<int, int> get_max(int v, int tl, int tr, int l, int r) {
+    if (l > r)
+        return make_pair(-INF, 0);
+    if (l == tl && r == tr)
+        return t[v];
+    int tm = (tl + tr) / 2;
+    return combine(get_max(v*2, tl, tm, l, min(r, tm)), 
+                   get_max(v*2+1, tm+1, tr, max(l, tm+1), r));
+}
+
+void update(int v, int tl, int tr, int pos, int new_val) {
+    if (tl == tr) {
+        t[v] = make_pair(new_val, 1);
+    } else {
+        int tm = (tl + tr) / 2;
+        if (pos <= tm)
+            update(v*2, tl, tm, pos, new_val);
+        else
+            update(v*2+1, tm+1, tr, pos, new_val);
+        t[v] = combine(t[v*2], t[v*2+1]);
+    }
+}
+
+// 7. Segment Tree + Lazy Update
+
+void build(int a[], int v, int tl, int tr) {
+    if (tl == tr) {
+        t[v] = a[tl];
+    } else {
+        int tm = (tl + tr) / 2;
+        build(a, v*2, tl, tm);
+        build(a, v*2+1, tm+1, tr);
+        t[v] = 0;
+    }
+}
+
+void update(int v, int tl, int tr, int l, int r, int add) {
+    if (l > r)
+        return;
+    if (l == tl && r == tr) {
+        t[v] += add;
+    } else {
+        int tm = (tl + tr) / 2;
+        update(v*2, tl, tm, l, min(r, tm), add);
+        update(v*2+1, tm+1, tr, max(l, tm+1), r, add);
+    }
+}
+
+int get(int v, int tl, int tr, int pos) {
+    if (tl == tr)
+        return t[v];
+    int tm = (tl + tr) / 2;
+    if (pos <= tm)
+        return t[v] + get(v*2, tl, tm, pos);
+    else
+        return t[v] + get(v*2+1, tm+1, tr, pos);
+}
+
+// 8. Divide and Conquer DP
+
+int n;
+long long C(int i, int j);
+vector<long long> dp_before(n), dp_cur(n);
+
+// compute dp_cur[l], ... dp_cur[r] (inclusive)
+void compute(int l, int r, int optl, int optr)
+{
+    if (l > r)
+        return;
+    int mid = (l + r) >> 1;
+    pair<long long, int> best = {INF, -1};
+
+    for (int k = optl; k <= min(mid, optr); k++) {
+        best = min(best, {dp_before[k] + C(k, mid), k});
+    }
+
+    dp_cur[mid] = best.first;
+    int opt = best.second;
+
+    compute(l, mid - 1, optl, opt);
+    compute(mid + 1, r, opt, optr);
+}
+
+// 9. Paraquet DP
+
+int n, m;
+vector < vector<long long> > d;
+
+
+void calc (int x = 0, int y = 0, int mask = 0, int next_mask = 0)
+{
+    if (x == n)
+        return;
+    if (y >= m)
+        d[x+1][next_mask] += d[x][mask];
+    else
+    {
+        int my_mask = 1 << y;
+        if (mask & my_mask)
+            calc (x, y+1, mask, next_mask);
+        else
+        {
+            calc (x, y+1, mask, next_mask | my_mask);
+            if (y+1 < m && ! (mask & my_mask) && ! (mask & (my_mask << 1)))
+                calc (x, y+2, mask, next_mask);
+        }
+    }
+}
+
+
+int main()
+{
+    cin >> n >> m;
+
+    d.resize (n+1, vector<long long> (1<<m));
+    d[0][0] = 1;
+    for (int x=0; x<n; ++x)
+        for (int mask=0; mask<(1<<m); ++mask)
+            calc (x, 0, mask, 0);
+
+    cout << d[n][0];
+
+}
+
+
+// 10. Hashing
+
+int count_unique_substrings(string const& s) {
+    int n = s.size();
+
+    const int p = 31;
+    const int m = 1e9 + 9;
+    vector<long long> p_pow(n);
+    p_pow[0] = 1;
+    for (int i = 1; i < n; i++)
+        p_pow[i] = (p_pow[i-1] * p) % m;
+
+    vector<long long> h(n + 1, 0);
+    for (int i = 0; i < n; i++)
+        h[i+1] = (h[i] + (s[i] - 'a' + 1) * p_pow[i]) % m;
+
+    int cnt = 0;
+    for (int l = 1; l <= n; l++) {
+        set<long long> hs;
+        for (int i = 0; i <= n - l; i++) {
+            long long cur_h = (h[i + l] + m - h[i]) % m;
+            cur_h = (cur_h * p_pow[n-i-1]) % m;
+            hs.insert(cur_h);
+        }
+        cnt += hs.size();
+    }
+    return cnt;
+}
+
+// 11. KMP
+
+
+vector <int> kmp(int n, string const &t) {
+
+	int T = (int)t.length();	
+	vector <int> occur, pi(T, 0);
+	for (int i = 1; i < T; ++i) {
+		int j = pi[i - 1];
+		while (j > 0 && t[j] != t[i])
+			j = pi[j - 1];
+		if (t[i] == t[j])
+			j++;
+		pi[i] = j;
+		//cout<<j<<"\t";
+		if (j == n)
+			occur.push_back(i - 2 * n);
+	}
+	return occur;
+}
+
+// 12. Suffix Array + LCP
+
+void suffix(int n) {
+	
+	for (int i = 0; i < n; ++i)
+		cnt[s[i]]++;
+	for (int i = 1; i < alphabet; ++i)
+		cnt[i] += cnt[i - 1];
+	for (int i = 0; i < n; ++i)
+		p[--cnt[s[i]]] = i;
+	int classes = 1;
+	c[p[0]] = 0;
+	for (int i = 1; i < n; ++i) {
+		if (s[p[i]] != s[p[i - 1]])
+			++classes;
+		c[p[i]] = classes - 1;
+	}
+
+	for (int h = 0; (1 << h) <  n; ++h) {
+		for (int i = 0; i < n; ++i) {
+			pn[i] = p[i] - (1 << h);
+			if (pn[i] < 0)
+				pn[i] += n;
+		}
+		for (int i = 0; i < classes; ++i)
+			cnt[i] = 0;
+		for (int i = 0; i < n; ++i)
+			cnt[c[pn[i]]]++;
+		for (int i = 1; i < classes; ++i)
+			cnt[i] += cnt[i - 1];
+		for (int i = n - 1; i >= 0; i--)
+			p[--cnt[c[pn[i]]]] = pn[i];
+		classes = 1;
+		cn[p[0]] = 0;
+		for (int i = 1; i < n; ++i) {
+			pair <int, int> cur = {c[p[i]], c[(p[i] + (1 << h)) % n]};
+			pair <int, int> prev = {c[p[i - 1]], c[(p[i - 1] + (1 << h)) % n]};
+			if (cur != prev)
+				++classes;
+			cn[p[i]] = classes - 1;
+		}
+		for (int i = 0; i < n; ++i)
+			c[i] = cn[i];
+	}
+	for (int i = 1; i < n; ++i) {
+		printf("%d\n", p[i]);
+	}
+	return;
+}
+
+void lcp_cons(int n) {
+
+	int k = 0;
+	for (int i = 0; i < n; ++i)
+		ran[p[i]] = i;
+	for (int i = 0; i < n; ++i) {
+		if (ran[i] == n - 1) {
+			k = 0;
+			continue;
+		}
+		int j = p[ran[i] + 1];
+		while (i + k < n && j + k < n && s[i + k] == s[j + k])
+			++k;
+		lcp[ran[i]] = k;
+		if (k)
+			k--;
+	}
+	stack <pair <int, int>> start, end;
+	for (int i = 1; i < n - 1; ++i) {
+		while (!start.empty() && start.top().first >= lcp[i])
+				start.pop();
+		if (start.empty())
+			L[i] = 1;
+		else
+			L[i] = start.top().second + 1;
+		start.push({lcp[i], i});
+		//cout<<"L : "<<L[i]<<endl;
+	}
+	for (int i = n - 2; i > 0; --i) {
+		while (!end.empty() && end.top().first >= lcp[i])
+				end.pop();
+		if (end.empty())
+			R[i] = n - 2;
+		else
+			R[i] = end.top().second - 1;
+		end.push({lcp[i], i});
+		//cout<<"R : "<<R[i]<<endl;
+	}
+}
+
+// 13. Prefix array
+
+	vector <int> z(n, 0);
+	for (int i = 1, l = 0, r = 0; i < n; ++i) {
+		if (i <= r)
+			z[i] = min(r - i + 1, z[i - l]);
+		while (i + z[i] < n && s[z[i]] == s[i + z[i]])
+			++z[i];
+		if (i + z[i] - 1 > r)
+			l = i, r = i + z[i] - 1;
+	}
+
+
+// 14. Dijkstra
+
+void dijsktra(int s1, int dist[][256]) 
+{
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < 1 << s; ++j)
+				dist[i][j] = INF;
+	set <pair <int, ipair>> q;
+	int b = 0;
+	if (shop[s1] != -1)
+		b = b | (1 << shop[s1]);
+	dist[s1][b] = 0;
+	q.insert(mk(0, mk(s1, b)));
+	while (!q.empty()) {
+		auto p = *q.begin();
+		q.erase(q.begin());
+		int u = p.second.first, bit = p.second.second;
+		for (auto it : adj[u]) {
+			int v = it.second, next = bit;	
+			if (shop[v] != -1)
+				next = next | (1 << shop[v]);
+			if (dist[v][next] == INF) {
+				dist[v][next] = dist[u][bit] + it.first;
+				q.insert(mk(dist[v][next], mk(v, next)));
+			}
+			else if (dist[v][next] > dist[u][bit] + it.first) {
+				q.erase(q.find(mk(dist[v][next], mk(v, next))));
+				dist[v][next] = dist[u][bit] + it.first;
+				q.insert(mk(dist[v][next], mk(v, next)));
+			}
+		}
+	}
+	return ;
+}
+
+// 15. Maxflow and Mincut (VE^2)
+
+int bfs(int s, int t, vector <int> &parent) {
+	fill(parent.begin(), parent.end(), -1);
+	parent[s] = -2;
+	queue <pair <int, int>> q;
+	q.push({s, inf});
+	while (!q.empty()) {
+		int cur = q.front().first;
+		int flow = q.front().second;
+		q.pop();
+		//cout<<flow<<" "<<cur<<endl;
+		for (int next : adj[cur])
+			if (cap[cur][next] && parent[next] == -1) {
+				parent[next] = cur;
+				int net_flow = min(flow, cap[cur][next]);
+				if (next == t)
+					return net_flow;
+				q.push({next, net_flow});
+			}
+	}
+	return 0;
+}
+
+int maxflow(int s, int t, int n) {
+	int flow = 0;
+	vector <int> parent(n);
+	int net_flow;
+	while (net_flow = bfs(s, t, parent)) {
+		flow += net_flow;
+		//cout<<net_flow<<endl;
+		if (net_flow >= 1e8)
+			return net_flow;
+		int cur = t;
+		while (cur != s) {
+			int prev = parent[cur];
+			cap[prev][cur] -= net_flow;
+			cap[cur][prev] += net_flow;
+			cur = prev;
+		}
+	}
+	return flow;
+}
+
+// 16. LCA
+
+int tin[1000], tout[1000], up[1000][11], l, tim;
+
+void dfs(int u, int p) {
+
+	tin[u] = tim++;
+	up[u][0] = p;
+	for (int i = 1; i <= l; ++i)
+		up[u][i] = up[up[u][i - 1]][i - 1];
+
+	for (int it : adj[u]) {
+		if (it != p)
+			dfs(it, u);
+	}
+	tout[u] = tim++;
+}
+
+bool ancestor(int u, int v) {
+
+	return tin[u] <= tin[v] && tout[u] >= tout[v];
+}
+
+int lca(int u, int v) {
+
+	if (ancestor(u, v))
+		return u;
+	if (ancestor(v, u))
+		return v;
+	for (int i = l; i >= 0; --i) {
+		if (!ancestor(up[u][i], v))
+			u = up[u][i];
+	}
+	return up[u][0];
+}
+
+// 17. Bridges
+
+void bridge(int u,int par)
+{
+	visit[u] = true;
+	low[u] = num[u] = cnt++;
+	for(auto it : adj[u]) {
+		if(!visit[it.second]) {
+			bridge(it.second,u);
+			if(!E[it.first])
+			printf("%d %d\n",u+1,it.second+1);
+			E[it.first] = true;
+			if(low[it.second] > num[u])
+				printf("%d %d\n",it.second+1,u+1);
+			low[u] = min(low[u],low[it.second]);
+		}
+		else if(it.second != par) {
+			low[u] = min(low[u],num[it.second]);
+			if(!E[it.first])
+			printf("%d %d\n",u+1,it.second+1);
+			E[it.first] = true;
+		}
+	}
+}
+
+
+// 18. Tree DP
+
+void DFS(int u,int par)
+{
+	visit[u] = true;
+	dp[u] = 1;
+	pref[u].push_back(1);
+	int i=0;
+	for(auto it=adj[u].begin();it!=adj[u].end();++it,++i)
+	{
+		if(visit[*it] == false)
+		DFS(*it,u);
+		if(*it != par)
+		{
+			dp[u] = (dp[u]*(dp[*it]+1))%PRIME;
+			pref[u].push_back((pref[u][i]*(dp[*it]+1))%PRIME);
+		}
+		else
+			pref[u].push_back(pref[u][i]);	
+	}
+	suff[u].push_back(1);
+	i=0;
+	for(auto it=adj[u].rbegin();it!=adj[u].rend();++it,++i)
+	{
+		if(*it != par)
+		suff[u].push_back((suff[u][i]*(dp[*it]+1))%PRIME);
+		else
+			suff[u].push_back(suff[u][i]);		
+	}
+	return;
+}
+
+void DFSans(int u,long long int par)
+{
+	visit[u] = true;
+	int i=0;
+	for(auto it=adj[u].begin();it!=adj[u].end();++it,++i)
+	{
+		if(visit[*it] == false)
+		{
+			int len = pref[u].size();
+			long long int val = (pref[u][i]*suff[u][len-i-2])%PRIME;
+			val = (val*(par))%PRIME;
+			//cout<<val<<" "<<u<<" "<<" "<<par<<" "<<pref[u][i]<<" "<<suff[u][len-i-2]<<endl;
+			dp[u] = val;
+			ans[*it] = (dp[*it]*(val+1))%PRIME;
+			DFSans(*it,dp[u]+1);
+		}
+	}
+	return;
+}

@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+const int prime = 998244353, N = 2e3;
+
+long long dp[][];
+int main() {
+  int n, k;
+  scanf("%d%d", &n, &k);
+  return 0;
+}

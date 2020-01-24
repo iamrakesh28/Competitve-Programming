@@ -1,0 +1,15 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5;
+
+int main() {
+  int q, b, g;
+  scanf("%d", &q);
+  char ch = getchar();
+  while (q--) {
+    
+  }
+  return 0;
+}

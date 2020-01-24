@@ -1,0 +1,10 @@
+#include <iostream>
+
+using namespace std;
+
+const int prime = 1e9 + 7, N = 1e6;
+int A[N];
+
+int main() {
+  
+}

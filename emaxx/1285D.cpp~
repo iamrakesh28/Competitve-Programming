@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+const int N = 1e5;
+int a[N], mark[N], node[1 << 21], val;
+bool visit[N];
+
+int solve(int j, int n) {
+  int Min = 1e9, Max = -1;
+  for (int i = 0; i < n; ++i) {
+    if (visit[i] == false)
+      continue;
+    Min = min(Min, mark[i]);
+    Max = max(Max, mark[i]);
+    if (a[i] & (1 << j)) {
+      mark[i] = 2 * mark[i] + 2;
+      node[mark[i]]++;
+    }
+    else {
+      mark[i] = 2 * mark[i] + 1;
+      node[mark[i]]++;
+    }
+  }
+  bool found = false;
+  for (int i = Min; i <= Max; ++i) {
+    int left = 2 * i + 1, right = 2 * i + 2;
+    if (node[left] == 0) {
+      found = true;
+      val = i;
+      break;
+    }
+    if (node[right] == 0) {
+      found = true;
+      val = i;
+      break;
+    }
+  }
+  if (found)
+    return j;
+  return solve(j - 1, n);
+}
+
+int main() {
+  int n, x, ind = 3;
+  val = 0;
+  scanf("%d", &n);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", a + i);
+  x = 0;
+  while (ind >= 0) {
+    cout<<ind<<" "<<val<<endl;
+    for (int i = 0; i < n; ++i)
+      visit[i] = (mark[i] == val) ? true : false;
+    ind = solve(ind, n);
+    for (int i = 0; i < n; ++i)
+      if (mark[i] == val) {
+	// x = x | (a[i] & (1 << ind));
+	val = i;
+	break;
+      }
+    memset(mark, 0, sizeof(int) * n);
+    memset(node, 0, sizeof node);
+    ind--;
+  }
+  printf("%d\n", val);
+  return 0;
+}

@@ -1,0 +1,28 @@
+#include <iostream>
+
+using namespace std;
+
+const int size = 2e5 + 5;
+bool x[size];
+int dpMin[size][4], dpMax[size][4];
+
+int solve(int xi, int state) {
+  if (xi == 0)
+    return 0;
+  if (dpMin[xi][state] == -1) {
+    
+  }
+  return dpMin[xi][state];
+}
+
+int main() {
+  int n;
+  scanf("%d", &n);
+  memset(x, false, sizeof(bool) * n);
+  for (int i = 0; i < n; ++i) {
+    int xi;
+    scanf("%d", &xi);
+    x[xi - 1] = true;
+  }
+  return 0;
+}

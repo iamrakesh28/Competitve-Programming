@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  int n, k, small = 0;
+  scanf("%d%d", &n, &k);
+  printf("! %d\n", small + 1);
+  fflush(stdout);
+  return 0;
+}
