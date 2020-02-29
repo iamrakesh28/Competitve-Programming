@@ -1,0 +1,12 @@
+r = int(input())
+ans = 0
+rem = r % 4
+if rem == 0 :
+   ans = r
+elif rem == 1:
+   ans = r ^ (r - 1)
+elif rem == 2:
+   ans = r ^ (r - 1) ^ (r - 2)
+else
+   ans = 0
+print(ans)

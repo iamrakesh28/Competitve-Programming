@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+int dp[N][1 << 8], bit[N];
+bool odd[1 << 8];
+
+struct interval {
+  int x, end, i;
+} interval[N];
+
+bool compare(struct interval &a, struct interval &b) {
+  if (a.x != b.x)
+    return a.x < b.x;
+  return a.end < b.end;
+}
+
+int main() {
+
+  int n, m, k;
+  scanf("%d%d%d", &n, &m, &k);
+  for (int i = 0; i < n; ++i) {
+    int l, r;
+    scanf("%d%d", &l, &r);
+    interval[i << 1] = {l, 1, i};
+    interval[(i << 1) + 1] = {r, -1, i};
+  }
+  sort(interval, interval + (n << 1), compare);
+  for (int i = 1; i < (1 << 8); ++i) {
+    int cnt = 0, num = i;
+    while (num) {
+      num = num & (num - 1);
+      cnt++;
+    }
+    if (cnt & 1)
+      odd[i] = true;
+  }
+
+  for (int i = 0; i < (n << 1); ++i) {
+    for (int j = 0; j < (1 << k); ++j) {
+      if (interval[i].end) {
+      }
+    }
+  }
+  return 0;
+}

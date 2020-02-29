@@ -1,0 +1,37 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 405;
+char s[N], t[N];
+bool dp[N][N][N];
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  while (q--) {
+    int S, T;
+    scanf("%s%s", s, t);
+    S = strlen(s), T = strlen(t);
+    for (int i = 0; i <= S; ++i)
+      for (int j = 0; j <= T; ++j)
+	for (int k = T; k >= 0; k--) {
+	  if (i == 0) {
+	    if (j > k)
+	      dp[i][j][k] = true;
+	    else
+	      dp[i][j][k] = false;
+	    continue;
+	  }
+	  dp[i][j][k] = dp[i - 1][j][k];
+	  if (j == 0 || k == T) {
+	    if (j == 0)
+	      dp[i][j][k] = dp[i - 1][][] || dp[][][];
+	  }
+	  if (s[i] == T[j])
+	    dp[i][j][k] = dp[i][j][k] || dp[i - 1][j - 1][k];
+	  else if (s[] == T[])
+	}
+  }
+  return 0;
+}

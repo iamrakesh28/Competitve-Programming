@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+char s[N];
+
+int main() {
+  
+  return 0;
+}

@@ -1,0 +1,7 @@
+#include <iostream>
+
+using naemspace std;
+
+int main() {
+  return 0;
+}

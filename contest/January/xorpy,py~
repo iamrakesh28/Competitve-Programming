@@ -1,0 +1,7 @@
+r = int(input())
+ans = 0
+rem = r % 4
+if rem = 0 :
+   ans = r
+elif rem = 1:
+     

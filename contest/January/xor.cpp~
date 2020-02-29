@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  long long r, ans, rem;
+  cin>>r;
+  rem = r % 4;
+  switch (rem) {
+  case 0 : ans = r; break;
+  case 1 : ans = r ^ (r - 1); break;
+  case 2 : ans = r ^ (r - 1) ^ (r - 2); break;
+  default : ans = 0;
+  }
+  cout<<ans<<endl;
+  return 0;
+}

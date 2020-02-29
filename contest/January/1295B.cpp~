@@ -1,0 +1,15 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+int pref[N];
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  while (q--) {
+  }
+  return 0;
+}

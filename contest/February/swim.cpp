@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int dp[30][30], n, m;
+int sum(int i, int j) {
+  if (i >= 0 && j >= 0 && i < n && j < m)
+    return dp[i][j];
+  return 0;
+}
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  while (q--) {
+    scanf("%d%d", &n, &m);
+    memset(dp, 0, sizeof dp);
+    char c = getchar();
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+	c = getchar();
+	int v = c - '0';
+	dp[i][j] = sum(i - 1, j) + sum(i, j - 1) - sum(i - 1, j - 1) + v;
+      }
+      c = getchar();
+    }
+    int perm = 4;
+    for (int a = 0; a < n; ++a) {
+      for (int b = 0; b < m; ++b) {
+	for (int i = a; i < n; ++i) {
+	  for (int j = b; j < m; ++j) {
+	    int zero = sum(i, j) - sum(i, b - 1) - sum(a - 1, j) + sum(a - 1, b - 1);
+	    //cout<<zero<<endl;
+	    if (zero == 0)
+	      perm = max(perm, 2 * (i - a + 1 + j - b + 1));
+	  }
+	}
+      }
+    }
+    printf("%d\n", perm);
+  }
+  return 0;
+}

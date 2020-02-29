@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cmath>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1e3 + 5;
+char s[N];
+int x[N], y[N];
+
+double euclid(double x1, double y1, double x2, double y2) {
+  double temp = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+  return sqrt(temp);
+}
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  while (q--) {
+    int n, m, w, h;
+    double ans = 1e14, temp;
+    set <char> st;
+    scanf("%d%d%d%d%s", &n, &m, &w, &h, s);
+    for (int i = 0; i < m; ++i)
+      scanf("%d%d", x + i, y + i);
+    for (int i = 0; i < m - 1; ++i)
+      for (int j = i + 1; j < m; ++j) {
+	temp = euclid(x[i], y[i], x[j], y[j]);
+	ans = min(ans, temp);
+      }
+    st.insert('U');
+    st.insert('D');
+    st.insert('L');
+    st.insert('R');
+    reverse(s, s + n);
+    for (int i = 0; i < n; ++i) {
+      char ch = s[i];
+      if (st.find(ch) == st.end())
+	continue;
+      st.erase(st.find(ch));
+      int diff;
+      if (ch == 'U' || ch == 'D') {
+	if (ch == 'U')
+	  diff = h;
+	else
+	  diff = 0;
+	for (int j = 0; j < m; ++j) {
+	  temp = abs(diff - y[j]);
+	  temp = 2 * temp;
+	  ans = min(ans, temp);
+	}
+	continue;
+      }
+      if (ch == 'L')
+	diff = 0;
+      else
+	diff = w;
+      for (int j = 0; j < m; ++j) {
+	temp = abs(diff - x[j]);
+	temp = 2 * temp;
+	ans = min(ans, temp);
+      }
+      
+    }
+    printf("%0.15lf\n", ans);
+    //cout<<ans<<endl;
+  }
+  return 0;
+}

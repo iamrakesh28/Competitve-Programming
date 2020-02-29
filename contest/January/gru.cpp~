@@ -1,0 +1,14 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+
+  int q;
+  scanf("%d", &q);
+  while (q--) {
+    long long n, k;
+    scanf("%ld%ld", &n, &k);
+  }
+  return 0;
+}}
