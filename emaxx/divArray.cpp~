@@ -1,0 +1,46 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5, inf = 1e9;
+int A[N];
+pair <int, int> tree[N];
+
+void build(int v, int tl, int tr) {
+  if (tl == tr)
+    tree[v] = {A[tl], A[tl]};
+  else {
+    tree[v].second = tree[2 * v + 1].second + tree[2 * v + 2].second;
+    tree[v].first = max(tree[2 * v + 1].first, tree[2 * v + 2].first + tree[2 * v + 1].second);
+  }
+}
+
+pair <int, int> query(int v, int tl, int tr, int l, int r) {
+  if (l > r)
+    return {inf, inf};
+  if (l == tl && r == tr)
+    return tree[v];
+  int tm = (tl + tr) >> 1;
+  auto left = query(2 * v + 1, tl, tm, l, min(tm, r));
+  auto right = query(2 * v + 2, tm + 1, tr, max(tm + 1, l), r);
+  if (left.first == inf)
+    return right;
+  if (right.first == inf)
+    return left;
+  pair <int, int> ret;
+  ret.second = left.second + right.second;
+  ret.first = max(left.first, right.first + left.second);;
+  return ret;
+}
+
+int main() {
+  int q;
+  scanf("%d", &q);
+  for (int i = 0; i < q; ++i) {
+    int n, s;
+    scanf("%d%d", &n, &s);
+    for (int j = 0; j < n; ++j)
+      scanf("%d", A + i);
+  }
+  return 0;
+}

@@ -1,0 +1,113 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 2e5 + 5;
+const long long inf = 1e16;
+
+long long t[N << 2], lazy[N << 2];
+int a[N];
+
+void build(int v, int tl, int tr) {
+  if (tl == tr)
+    t[v] = a[tl];
+  else {
+    int mid = tl + tr >> 1;
+    build(2 * v + 1, tl, mid);
+    build(2 * v + 2, mid + 1, tr);
+    t[v] = min(t[2 * v + 1], t[2 * v + 2]);
+    lazy[v] = 0;
+  }
+}
+
+void push(int v) {
+  t[2 * v + 1] += lazy[v];
+  lazy[2 * v + 1] += lazy[v];
+  t[2 * v + 2] += lazy[v];
+  lazy[2 * v + 2] += lazy[v];
+  lazy[v] = 0;
+}
+
+void update(int v, int tl, int tr, int l, int r, int val) {
+  if (l > r)
+    return;
+  if (l == tl && tr == r) {
+    t[v] += val;
+    lazy[v] += val;
+  }
+  else {
+    push(v);
+    int tm = tl + tr >> 1;
+    update(2 * v + 1, tl, tm, l, min(tm, r), val);
+    update(2 * v + 2, tm + 1, tr, max(l, tm + 1), r, val);
+    t[v] = min(t[2 * v + 1], t[2 * v + 2]);
+  }
+}
+
+long long query(int v, int tl, int tr, int l, int r) {
+  if (l > r)
+    return inf;
+  if (l == tl && r == tr)
+    return t[v];
+  push(v);
+  int tm = tl + tr >> 1;
+  return min(query(2 * v + 1, tl, tm, l, min(tm, r)),
+	     query(2 * v + 2, tm + 1, tr, max(l, tm + 1), r));
+}
+
+int scan(int& l, int& r, int& v) {
+  char ch;
+  int cnt = 0, x = 0;
+  while ((ch = getchar()) != '\n') {
+    if (ch == ' ') {
+      cnt++;
+      switch(cnt) {
+      case 1 : l = x; break;
+      case 2 : r = x;
+	scanf("%d", &v);
+	cnt++;
+	ch = getchar();
+	return cnt;
+      }
+      x = 0;
+    }
+    else
+      x = 10 * x + ch - '0';
+  }
+  cnt++;
+  r = x;
+  return cnt;
+}
+
+int main() {
+  int n, m;
+  scanf("%d", &n);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", a + i);
+  build(0, 0, n - 1);
+  scanf("%d", &m);
+  char ch = getchar();
+  while (m--) {
+    long long ans;
+    int l, r, v, cnt = 0;
+    cnt = scan(l, r, v);
+    if (cnt == 2) {
+      if (l > r) {
+	ans = query(0, 0, n - 1, l, n - 1);
+	ans = min(ans, query(0, 0, n - 1, 0, r));
+      }
+      else
+	ans = query(0, 0, n - 1, l, r);
+      printf("%lld\n", ans);
+    }
+    else {
+      if (l > r) {
+	update(0, 0, n - 1, l, n - 1, v);
+	update(0, 0, n - 1, 0, r, v);
+      }
+      else
+	update(0, 0, n - 1, l, r, v);
+    }
+  }
+  return 0;
+}

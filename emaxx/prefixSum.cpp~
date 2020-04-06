@@ -1,0 +1,13 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5;
+pair <int, int> A[N << 2];
+
+void build(int v, int ) {
+}
+
+int main() {
+  return 0;
+}

@@ -1,0 +1,80 @@
+#include <iostream>
+#include <set>
+#include <list>
+
+using namespace std;
+
+const int N = 2e5;
+
+int par[N], ht[N];
+set <pair <int, int>> node;
+list <int> adj[N];
+
+void dfs(int u, int p, int height) {
+  ht[u] = height;
+  for (int v : adj[u])
+    if (v != p)
+      dfs(v, u, height + 1);
+}
+
+int main() {
+  int n, m;
+  scanf("%d%d", &n, &m);
+  for (int i = 0; i < n - 1; ++i) {
+    int u, v;
+    scanf("%d%d", &u, &v);
+    adj[v - 1].push_back(u - 1);
+    adj[u - 1].push_back(v - 1);
+    par[v - 1] = u - 1;
+  }
+  dfs(0, 0, 0);
+  while (m--) {
+    int k;
+    bool ans = true;
+    scanf("%d", &k);
+    node.clear();
+    for (int i = 0; i < k; ++i) {
+      int ki;
+      scanf("%d", &ki);
+      node.insert({ht[ki - 1], ki - 1});
+    }
+    int h = (*node.begin()).first, p = par[(*node.begin()).second]; 
+    for (auto it : node) {
+      if (it.first == h) {
+	if (par[it.second] != p) {
+	  ans = false;
+	  break;
+	}
+	continue;
+      }
+      else {
+	if (it.first == h + 1) {
+	  p = par[it.second];
+	  if (node.find({ht[p], p}) == node.end()) {
+	    ans = false;
+	    break;
+	  }
+	  h = it.first;
+	}
+	else if (it.first == h + 2) {
+	  p = par[it.second];
+	  h = it.first;
+	  if (node.find({ht[par[p]], par[p]}) == node.end()) {
+	    ans = false;
+	    break;
+	  }
+	}
+	else {
+	  cout<<"hello\n";
+	  ans = false;
+	  break;
+	}
+      }
+    }
+    if (ans)
+      puts("YES");
+    else
+      puts("NO");
+  }
+  return 0;
+}
