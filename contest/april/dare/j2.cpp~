@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+char S[N];
+
+int main() {
+  int n, k, ans;
+  scanf("%d%d%s", &n, &k, S);
+}

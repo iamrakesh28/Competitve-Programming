@@ -1,0 +1,6 @@
+#include <isotream>
+#include <cstring>
+
+using namespace std;
+
+char S[55];

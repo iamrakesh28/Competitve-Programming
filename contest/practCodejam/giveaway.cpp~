@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int N = 5e5 + 5;
+vector <vector <int>> b;
+int x[N];
+
+void update(int len, int i, int b) {
+  int a = x[i];
+  i = i / len;
+  auto it = lower_bound(b[i].begin(), b[i].end(), a);
+  (*it) = a;
+  sort(b[i].begin(), b[i].end());
+  return;
+}
+
+int main() {
+  int n, q;
+  scanf("%d", &n);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", x + i);
+  scanf("%d", &q);
+  int len = (int)sqrt(n + .0) + 1;
+  b.resize(len);
+  for (int i = 0; i < n; ++i)
+    b[i / len].push_back(x[i]);
+  for (int i = 0; i < len; ++i)
+    sort(b[i].begin(), b[i].end());
+  while (q--) {
+    int o, a, b, c;
+    scanf("%d%d%d", &o, &a, &b);
+    if (o) {
+    }
+    else {
+      a--;
+      update(len, a, b);
+    }
+  }
+  return 0;
+}
