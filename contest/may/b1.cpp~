@@ -1,0 +1,10 @@
+#include <isotream>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+int t[N];
+
+int main() {
+  return 0;
+}

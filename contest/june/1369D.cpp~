@@ -1,0 +1,7 @@
+#include <iostream>
+
+using namespace std;
+typedef long long ll;
+
+const int N = 2e6 + 5, prime = 1e9 + 7;
+ll dp[N[2;

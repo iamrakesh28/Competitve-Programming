@@ -1,0 +1,6 @@
+#include <isotream>
+
+using namespace std;
+
+const int N = 25;
+int eff[N][N];

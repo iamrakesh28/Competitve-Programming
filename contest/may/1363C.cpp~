@@ -1,0 +1,10 @@
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+list <int> adj[1005];
+
+int main() {
+  return 0;
+}

@@ -1,0 +1,7 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 2e3 + 5;
+pair <int, int> pos[N];
+int dp[N][N];

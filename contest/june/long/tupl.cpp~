@@ -1,0 +1,76 @@
+#include <iostream>
+
+using namespace std;
+
+int a[6];
+
+bool one() {
+  int diff, mul;
+  bool init_diff = false, init_mul = false, mpos = true, dpos = true;
+  for (int i = 0; i < 3; ++i) {
+    if (a[i] != a[i + 3]) {
+      if (init_diff == false) {
+	diff = a[i] - a[i + 3];
+	init_diff = true;
+      }
+      else if (diff != a[i] - a[i + 3])
+	dpos = false;
+      if (init_mul == false) {
+	if (a[i + 3] % a[i] == 0)
+	  mul = a[i + 3] / a[i];
+	else
+	  mpos = false;
+	init_mul = true;
+      }
+      else {
+	if (a[i + 3] % a[i] == 0) {
+	  if (a[i + 3] / a[i] != mul)
+	    mpos = false;
+	}
+	else
+	  mpos = false;
+      }
+    }
+  }
+  return mpos || dpos;
+}
+
+bool same(int val) {
+  bool poss = false;
+  int x1, x2, n1, d1, n2, d2;
+  if (val == 7) {
+    int x, d;
+    d1 = a[] - a[];
+    d2 = a[] - a[];
+  }
+  return poss;
+}
+
+bool two() {
+  for (int i = 1; i < 8; ++i) {
+    for (int j = 1; j < 8; ++j) {
+    }
+  }
+}
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  while (t--) {
+    int ans = 3;
+    for (int i = 0; i < 6; ++i)
+      scanf("%d", a + i);
+    bool zero = true;
+    for (int i = 0; i < 3; ++i)
+      if (a[i] != a[i + 3])
+	zero = false;
+    if (zero) {
+      puts("0");
+      continue;
+    }
+    if (one())
+      ans = 1;
+    printf("%d\n", ans);
+  }
+  return 0;
+}

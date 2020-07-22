@@ -1,0 +1,9 @@
+#include <isotream>
+
+using namespace std;
+
+const int N = 55;
+int row[N], col[N];
+
+int main() {
+}

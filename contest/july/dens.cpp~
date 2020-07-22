@@ -1,0 +1,46 @@
+#include <iostream>
+
+typedef long long ll;
+
+using namespace std;
+
+const int N = 2e5 + 5;
+ll t[N << 2];
+int a[N], h[N];
+
+// use sparse table later
+int find_max(int l, int r) {
+  int hi = -1;
+  for (int i = l; i <= r; ++i)
+    hi = max(hi, h[i]);
+  return hi;
+}
+
+void build(int v, int l, int r) {
+  if (l == r) {
+    t[v] = a[l];
+    return;
+  }
+  int mid = (l + r) >> 1;
+  build(2 * v + 1, l, mid);
+  build(2 * v + 2, mid + 1, r);
+  int mx = find_max(l + 1, r - 1);
+  // not possible
+  if (mx >= max(h[l], h[r])) {
+    t[v] = -1;
+    return;
+  }
+}
+
+int main() {
+  int n, q;
+  scanf("%d%d", &n, &q);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", h + i);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", a + i);
+  build();
+  while (q--) {
+  }
+  return 0;
+}

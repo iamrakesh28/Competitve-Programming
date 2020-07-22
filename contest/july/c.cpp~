@@ -1,0 +1,20 @@
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+const int N = 5e5 + 5;
+
+list <int> adj[N];
+vector <int> A[N], B[N];
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  for (int j = 0; j < t; ++j) {
+    int n, a, b;
+    scanf("%d%d%d", &n, &a, &b);
+  }
+  return 0;
+}

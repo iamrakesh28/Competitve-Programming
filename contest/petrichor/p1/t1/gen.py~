@@ -1,0 +1,12 @@
+import random
+
+N = int(5e5)
+Q = int(5e5)
+A = int(1e9)
+
+def query(q):
+    vec = []
+    for i in range(q):
+        ai = random.randint(1, A)
+        vec.append(ai)
+    

@@ -1,0 +1,142 @@
+import numpy as np
+from numpy.random import randint, choice, uniform
+from random import randint
+from string import ascii_lowercase
+
+NUM_TEST_SET = 15
+
+prob_large = 0.5
+
+NUM_T = 10
+
+MIN_N = 50
+MAX_N = 100
+
+MIN_M1 = 100
+MAX_M1 = 200
+
+MIN_M2 = 100
+MAX_M2 = 200
+
+MIN_M3 = 100
+MAX_M3 = 200
+
+MIN_G = int(1e7)
+MAX_G = int(1e9)
+
+MIN_H = int(1e7)
+MAX_H = int(1e9)
+
+MIN_D = int(1e2)
+MAX_D = int(1e5)
+
+MIN_P = int(1e7)
+MAX_P = int(1e9)
+
+MIN_C = int(1e7)
+MAX_C = int(1e9)
+
+prob_end = 0.7
+
+def write_test(fl):
+    
+    n = randint(MIN_N, MAX_N)
+    fl.write(str(n) + '\n')
+
+    for i in range(n):
+        d = randint(MIN_D, MAX_D)
+        fl.write(str(d) + ' ')
+    fl.write('\n')
+
+    for i in range(n):
+        p = randint(MIN_D, MAX_D)
+        fl.write(str(p) + ' ')
+    fl.write('\n')
+
+    safe_set = set()
+    if uniform(0, 1) <= prob_large:
+        S = randint(max(0, n - 10), n)
+    else:
+        S = randint(1, n)
+    fl.write(str(S) + '\n')
+    for i in range(S):
+
+        notFound = True
+        while notFound:
+            s = randint(0, n - 1)
+            if s not in safe_set:
+                fl.write(str(s) + ' ')
+                safe_set.add(s)
+                notFound = False
+    safe_set_list = list(safe_set)
+    fl.write('\n')
+
+    road_set = set()
+    m1 = randint(MIN_M1, MAX_M1)
+    fl.write(str(m1) + '\n')
+    for i in range(m1):
+
+        notFound = True
+        while notFound:
+            u = randint(0, n - 1)
+            if randint(0, 1) <= prob_end:
+                v = choice(safe_set_list)
+            else:
+                v = randint(0, n - 1)
+            
+            if ((u, v) not in road_set) and ((v, u) not in road_set):
+                c = randint(MIN_C, MAX_C)
+                fl.write(str(u) + ' ' + str(v) + ' ' + str(c) + '\n')
+                road_set.add((u, v))
+                notFound = False
+
+    metro_set = set()
+    m2 = randint(MIN_M2, MAX_M2)
+    g = randint(MIN_G, MAX_G)
+    fl.write(str(m2) + ' ' + str(g) + '\n')
+    for i in range(m2):
+
+        notFound = True
+        while notFound:
+            u = randint(0, n - 1)
+            if uniform(0, 1) <= prob_end:
+                v = choice(safe_set_list)
+            else:
+                v = randint(0, n - 1)
+            
+            if ((u, v) not in metro_set) and ((v, u) not in metro_set) and ((v, u) not in road_set):
+                fl.write(str(u) + ' ' + str(v) + '\n')
+                metro_set.add((u, v))
+                notFound = False
+
+    rail_set = set()
+    m3 = randint(MIN_M3, MAX_M3)
+    h = randint(MIN_G, MAX_G)
+    fl.write(str(m3) + ' ' + str(h) + '\n')
+    for i in range(m3):
+
+        notFound = True
+        while notFound:
+            u = int(randint(0, n - 1))
+            if randint(0, 1) <= prob_end:
+                v = choice(safe_set_list)
+            else:
+                v = randint(0, n - 1)
+            
+            if (u, v) not in rail_set and ((v, u) not in rail_set) and ((v, u) not in metro_set) and ((v, u) not in road_set):
+                fl.write(str(u) + ' ' + str(v) + '\n')
+                rail_set.add((u, v))
+                notFound = False
+
+def main():
+
+    for i in range(NUM_TEST_SET):
+        fl = open('test_cases/input/input' + str(i).zfill(2) + '.txt', 'w')
+        fl.write(str(NUM_T) + '\n')
+        for t in range(NUM_T):
+            write_test(fl)
+            fl.write('\n')
+        fl.close()
+
+if __name__ == '__main__':
+    main()

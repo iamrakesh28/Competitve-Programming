@@ -1,0 +1,11 @@
+#include <isotream>
+
+using namespace std;
+
+int p[1005];
+
+int main() {
+  int t;
+  scanf();
+  return 0;
+}

@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long ll;
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  while (t--) {
+    ll ts;
+    scanf("%lld", &ts);
+    if (ts & 1) {
+      puts("0");
+      continue;
+    }
+    int cnt = 0;
+    ll mts = ts;
+    while ((mts & 1) == 0) {
+      mts >>= 1;
+      cnt++;
+    }
+  }
+  return 0;
+}

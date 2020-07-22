@@ -50,6 +50,11 @@ public:
     }
     puts("");
   }
+
+  /*
+  ofstream& <<() const {
+  }
+  */
   ~List() {
     while (start != NULL) {
       Node *next = start->next;

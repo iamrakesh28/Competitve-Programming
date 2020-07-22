@@ -1,0 +1,9 @@
+#include <iostream>
+#include <set>
+#include <list>
+
+using namespace std;
+
+const int N = 105;
+list <pair <int, int>> adj[N];
+int ans[N * 10];

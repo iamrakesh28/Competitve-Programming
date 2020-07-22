@@ -1,0 +1,10 @@
+#include <isotream>
+
+using namespace std;
+
+const int N = 205;
+int dp[N][N][N][3];
+
+int main() {
+  return 0;
+}

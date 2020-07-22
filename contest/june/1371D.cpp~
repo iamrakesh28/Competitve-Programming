@@ -1,0 +1,9 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 305;
+int mat[N][N];
+
+int main() {
+}

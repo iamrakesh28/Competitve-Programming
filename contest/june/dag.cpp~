@@ -1,0 +1,66 @@
+#include <iostream>
+#include <cstring>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+const int N = 1e5 + 5;
+list <pair<int, int>> adj[N];  // {weight, node}
+bool visit[N];
+int dp[N], pointer[N], outdeg[N];
+
+void dfs(int u) {
+  int path = 0, child = -1;
+  visit[u] = true;
+  for (auto v : adj[u]) {
+    int val;
+    if (visit[v.second] == false)
+      dfs(v.second);
+    val = dp[v.second];
+    if (val + v.first >= path) {
+      path = val + v.first;
+      child = v.second;
+    }
+  }
+  dp[u] = path;
+  pointer[u] = child;
+  return;
+}
+
+int main() {
+  int n, m;
+  scanf("%d%d", &n, &m);
+  for (int i = 0; i < m; ++i) {
+    int u, v, w;
+    scanf("%d%d%d", &u, &v, &w);
+    u--, v--;
+    outdeg[v]++;
+    adj[u].push_back({w, v});
+  }
+  int longest = -1, top;
+  memset(visit, false, sizeof visit);
+  /*
+  for (int i = 0; i < n; ++i)
+    if (outdeg[i] == 0) {
+      top = i;
+      break;
+    }
+  */
+  // one source -> 1, one sink
+  top = 0;
+  dfs(top);
+  vector <int> path;
+  longest = dp[top];
+  path.push_back(top);
+  int v = pointer[top];
+  while (v != -1) {
+    path.push_back(v);
+    v = pointer[v];
+  }
+  printf("%d\n", longest);
+  for (int v : path)
+    printf("%d ", v + 1);
+  puts("");
+  return 0;
+}

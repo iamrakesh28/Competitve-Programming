@@ -1,0 +1,10 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 305;
+int grid[N][N];
+
+int main() {
+  return 0;
+}

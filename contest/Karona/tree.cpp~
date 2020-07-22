@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef long long ll;
+const int N = 1e4 + 5, x = 0x7fffffff, K = 15;
+const ll inf = -1e18;
+int node[N];
+ll dp[N][K][2], arr[N][K][2];
+vector <int> adj[N];
+
+void dfs(int u, int p, int k) {
+  vector <int> sep;
+  for (int v : adj[u])
+    if (v != p) {
+      dfs(v, u, k);
+      sep.push_back(v);
+    }
+  int n = sep.size();
+  for (int i = 0; i <= k; ++i)
+    for (int j = 0; j <= n; ++j) {
+      if (j == 0) {
+	arr[i][j][0] = 0;
+	arr[i][j][1] = inf;
+	continue;
+      }
+      arr[i][j][0] = arr[i][j][1] = inf;
+      for (int r = 0; r <= i; ++r) {
+	arr[i][j][1] = dp[sep[j - 1]][r][0] + arr[i - r][j - 1][1];
+	arr[i][j][1] = max(arr[i][j][1], dp[sep[j - 1]][r][1] + arr[i - r][j - 1][0]);
+	arr[i][j][0] = dp[sep[j - 1]][r][0] + arr[i - r][j - 1][0];
+      }
+    }
+  for (int i = 0; i <= k; ++i) {
+    if (i == 0) {
+      if (n == 0)
+	dp[u][i][0] = node[u];
+      else 
+	dp[u][i][0] = arr[i][n][0] + node[u];
+      dp[u][i][1] = inf;
+      continue;
+    }
+    if (n == 0) {
+      dp[u][i][0] = max(node[u], x ^ node[u]);
+      dp[u][i][1] = node[u] ^ x;
+    }
+    else {
+      dp[u][i][0] = max(arr[i][n][0] + node[u], arr[i - 1][n][0] + x ^ node[u]);
+      dp[u][i][1] = arr[i - 1][n][1] + x ^ node[u];
+    }
+  }
+}
+
+int main() {
+  int n, k;
+  scanf("%d%d", &n, &k);
+  for (int i = 0; i < n; ++i)
+    scanf("%d", node + i);
+  for (int i = 0; i < n - 1; ++i) {
+    int u, v;
+    scanf("%d%d", &u, &v);
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+  }
+  dfs(0, 0, k);
+  vector <int> vec = {2, 3, 4};
+  for (int v : vec)
+    cout<<dp[v][k][0]<<" "<<dp[v][k][1]<<endl;
+  ll ans = dp[0][k][0];
+  printf("%lld\n", x);
+  return 0;
+}

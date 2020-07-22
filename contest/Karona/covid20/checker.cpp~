@@ -1,0 +1,15 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+int main() {
+  ifstream fp("empty", ios :: in);
+  int l;
+  //fp>>l;
+  cout<<l<<endl;
+  while (fp >> l) {
+    cout<<l<<endl;
+  }
+  return 0;
+}

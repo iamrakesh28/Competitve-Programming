@@ -1,0 +1,8 @@
+#include <iostream>
+#include <map>
+
+map <int, int> mp;
+
+int main() {
+  return 0;
+}
