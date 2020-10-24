@@ -1,0 +1,36 @@
+#include <isotream>
+#include <set>
+
+using namespace std;
+
+const int N = 105;
+int a[N];
+set <int> dis;
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  while (t--) {
+    int n, k, m;
+    dis.clear();
+    scanf("%d%d", &n, &k);
+    for (int i = 0; i < n; ++i) {
+      scanf("%d", a + i);
+      dis.insert(a[i]);
+    }
+    if (dis.size() > 1 && k == 1) {
+      puts("-1");
+      continue;
+    }
+    if (dis.size() == 1) {
+      puts("1");
+      continue;
+    }
+    m = dis.size();
+    int ans = m;
+    for (int i = 1; i < m; ++i) {
+    }
+    printf("%d\n", ans);
+  }
+  return 0;
+}

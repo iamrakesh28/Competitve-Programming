@@ -1,0 +1,125 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+typedef long long ll;
+const int N = 1e6 + 5, prime = 1e9 + 7;
+ll L[N], H[N], W[N];
+ll aL, bL, cL, dL, aH, bH, cH, dH;
+ll aW, bW, cW, dW;
+set <pair <ll, ll>> interval;
+
+void compute(int k, int n) {
+  ll li, hi, wi;
+  for (int i = k; i < n; ++i) {
+    li = (aL * L[i - 2]) % dL;
+    li = (li + (bL * L[i - 1]) % dL) % dL;
+    li = (li + cL) % dL;
+    li = li + 1;
+    L[i] = li;
+
+    hi = (aH * H[i - 2]) % dH;
+    hi = (hi + (bH * H[i - 1]) % dH) % dH;
+    hi = (hi + cH) % dH;
+    hi = hi + 1;
+    H[i] = hi;
+
+    wi = (aW * W[i - 2]) % dW;
+    wi = (wi + (bW * W[i - 1]) % dW) % dW;
+    wi = (wi + cW) % dW;
+    wi = wi + 1;
+    W[i] = wi;
+  }
+  return;
+}
+
+ll solve(int i) {
+  ll temp = 0;
+  auto it = interval.lower_bound({L[j], -1});
+  if (it != interval.begin()) {
+    if ((*it).first != L[j] && it != interval.begin())
+      it--;
+  }
+  
+  while (it != interval.end()) {
+    ll first = (*it).first;
+    if (first >= L[j] + W[j])
+	    break;
+    ll second = (*it).second;
+    if (L[j] > first) {
+      interval.erase(it);
+      if (second >= L[j] + W[j]) {
+	temp = (temp + second - first) % prime;
+	interval.insert({first, L[j]});
+	interval.insert({L[j] + W[j], second});
+	break;
+      }
+      else {
+	temp = (temp + ((second - L[j]) << 1)) % prime;
+	interval.insert({first, L[j]});
+      }
+    }
+    else if (L[j] + W[j] < second) {
+      temp = (temp + ((L[j] + W[j] - first) << 1)) % prime;
+      interval.erase(it);
+      interval.insert({L[j] + W[j], second});
+      break;
+    }
+    else {
+      temp = (temp + ((second - first) << 1)) % prime;
+      interval.erase(it);
+    }
+    it = interval.upper_bound({first, second});
+  }
+  return temp;
+}
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  for (int i = 0; i < t; ++i) {
+    int n, k;
+    ll pi, ans, prev, next;
+    interval.clear();
+    scanf("%d%d%d", &n, &k);
+    for (int j = 0; j < k; ++j)
+      scanf("%lld", L + j);
+    scanf("%lld%lld%lld%lld", &aL, &bL, &cL, &dL);
+    for (int j = 0; j < k; ++j)
+      scanf("%lld", W + j);
+    scanf("%lld%lld%lld%lld", &aW, &bW, &cW, &dW);
+    for (int j = 0; j < k; ++j)
+      scanf("%lld", H + j);
+    scanf("%lld%lld%lld%lld", &aH, &bH, &cH, &dH);
+    compute(k, n);
+
+    pi = ((w[0] + H[0]) << 1) % prime;
+    ans = pi;
+    prev = L[0], next = L[0] + W[0];
+    for (int j = 1; j < n; ++j) {
+      ll temp;
+      if (L[j] > next) {
+	interval.insert({next, L[j]});
+	pi = (pi + ((W[j] + H[j]) << 1)) % prime;
+	ans = (ans * pi) % prime;
+      }
+      else {
+	temp = 0;
+	if (L[j] + W[j] > next)
+	  temp = (L[j] + W[j] - next) << 1;
+	if (L[j] < prev)
+	  temp += (prev - L[j]) << 1;
+	temp = temp % prime;
+	if (interval.size())
+	  temp = (temp + solve(i)) % prime;
+	pi = (pi + temp) % prime;
+	ans = (ans * pi) % prime;
+      }
+      prev = min(prev, L[j]);
+      next = max(next, L[j] + W[j]);
+    }
+    printf("Case #%d: %lld\n", i + 1, ans);
+  }
+  return 0;
+}

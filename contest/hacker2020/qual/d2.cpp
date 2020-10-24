@@ -1,0 +1,151 @@
+#include <iostream>
+#include <list>
+
+using namespace std;
+typedef long long ll;
+
+const int N = 1e6 + 5, L = 22;
+const ll inf = 1e17;
+
+int height[N], tin[N], tout[N],
+  up[N][L], timer, ci[N], m, a, b;
+list <int> adj[N];
+ll t[N << 2];
+
+void init(int n) {
+  for (int i = 0; i < n; ++i)
+    adj[i].clear();
+  for (int i = 0; i < 4 * n; ++i)
+    t[i] = inf;
+  timer = 0;
+  return;
+}
+
+void update(int v, int tl, int tr, int pos, ll val) {
+  if (tl == tr) {
+    t[v] = val;
+    return;
+  }
+  int tm = (tl + tr) >> 1;
+  if (pos <= tm)
+    update(2 * v + 1, tl, tm, pos, val);
+  else
+    update(2 * v + 2, tm + 1, tr, pos, val);
+  t[v] = min(t[2 * v + 1], t[2 * v + 2]);
+}
+
+ll query(int v, int tl, int tr, int l, int r) {
+  if (l > r)
+    return inf;
+  if (l == tl && r == tr)
+    return t[v];
+  int tm = (tl + tr) >> 1;
+  return min(query(2 * v + 1, tl, tm, l, min(tm, r)),
+	     query(2 * v + 2, tm + 1, tr, max(tm + 1, l), r));
+}
+
+void dfs1(int u, int p, int ht) {
+  tin[u] = ++timer;
+  up[u][0] = p;
+
+  for (int i = 1; i <= L; ++i)
+    up[u][i] = up[up[u][i - 1]][i - 1];
+  height[u] = ht;
+
+  for (int v : adj[u])
+    if (v != p)
+      dfs1(v, u, ht + 1);
+
+  tout[u] = ++timer;
+}
+
+bool ancestor(int u, int v) {
+  return (tin[u] <= tin[v] && tout[u] >= tout[v]);
+}
+
+int lca(int u, int v) {
+  if (ancestor(u, v))
+    return u;
+  if (ancestor(v, u))
+    return v;
+  for (int i = L; i >= 0; i--) {
+    if (ancestor(up[u][i], v) == false)
+      u = up[u][i];
+  }
+  return up[u][0];
+}
+
+void dfs2(int u, int p, int n) {
+
+  if (u == b) {
+    //cout<<b+1<<" "<<height[u]<<endl;
+    update(0, 0, n - 1, height[u], 0);
+    return;
+  }
+  
+  int anc, len, ht, first = -1;
+  for (int v : adj[u]) {
+    if (v != p && ancestor(v, b))
+      first = v;
+  }
+  if (first != -1)
+     dfs2(first, u, n);
+
+  if (ci[u]) {
+    anc = lca(u, b);
+    ht = height[anc];
+    len = height[u] - ht;
+    len = m - len;
+    if (len >= 0) {
+      ll dp = query(0, 0, n - 1, ht, min(ht + len, height[b]));
+      //cout<<u+1<<" "<<ht<<" "<<len<<" "<<dp<<endl;
+      if (u != a)
+	dp = dp + ci[u];
+      if (dp >= inf)
+	dp = inf;
+      ll val = query(0, 0, n - 1, height[u], height[u]);
+      if (val > dp)
+	update(0, 0, n - 1, height[u], dp);
+    }
+  }
+  
+  for (int v : adj[u]) {
+    if (v != p && v != first)
+      dfs2(v, u, n);
+  }
+  
+  return;
+}
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  for (int h = 0; h < t; ++h) {
+    int n;
+    scanf("%d%d%d%d", &n, &m, &a, &b);
+    init(n);
+    a--, b--;
+    for (int i = 0; i < n; ++i) {
+      int pi;
+      scanf("%d%d", &pi, ci + i);
+      if (pi) {
+	adj[i].push_back(pi - 1);
+	adj[pi - 1].push_back(i);
+      }
+    }
+    ci[a] = 1;
+    if (h >= 16) {
+      printf("Case #%d: -1\n", h + 1);
+      continue;
+    }
+    dfs1(a, a, 0);
+    dfs2(a, a, n);
+    ll ans = query(0, 0, n - 1, 0, 0);
+    printf("Case #%d: ", h + 1);
+    if (ans >= inf)
+      puts("-1");
+    else
+      printf("%lld\n", ans);
+  }
+  return 0;
+}

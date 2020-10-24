@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long ll;
+const int N = 1e6 + 5, prime = 1e9 + 7;
+ll L[N], H[N];
+ll aL, bL, cL, dL, aH, bH, cH, dH;
+
+struct Room {
+  ll l;
+  int hi, end;
+};
+vector <Room> line;
+
+bool compare(Room &a, Room &b) {
+  if (a.l < b.l)
+    return true;
+  if (a.l > b.l)
+    return false;
+  return a.end < b.end;
+}
+
+void compute(int k, int n) {
+  ll li, hi;
+  for (int i = k; i < n; ++i) {
+    li = (aL * L[i - 2]) % dL;
+    li = (li + (bL * L[i - 1]) % dL) % dL;
+    li = (li + cL) % dL;
+    li = li + 1;
+    L[i] = li;
+
+    hi = (aH * H[i - 2]) % dH;
+    hi = (hi + (bH * H[i - 1]) % dH) % dH;
+    hi = (hi + cH) % dH;
+    hi = hi + 1;
+    H[i] = hi;
+  }
+
+  for (int i = 0; i < n; ++i) {
+    line.push_back({L[i], i, 1});
+    line.push_back({L[i] + w, i, -1});
+  }
+  sort(line.begin(), line.end(), compare);
+  return;
+}
+
+int main() {
+  int t;
+  scanf("%d", &t);
+  for (int i = 0; i < t; ++i) {
+    int n, k, w;
+    ll pi, ans;
+    line.clear();
+    scanf("%d%d%d", &n, &k, &w);
+    for (int j = 0; j < k; ++j)
+      scanf("%lld", L + j);
+    scanf("%lld%lld%lld%lld", &aL, &bL, &cL, &dL);
+    for (int j = 0; j < k; ++j)
+      scanf("%lld", H + j);
+    scanf("%lld%lld%lld%lld", &aH, &bH, &cH, &dH);
+    compute(k, n);
+
+    int size = line.size(), cur = 0;
+    ll prev, hi;
+    for (int j = 0; j < size; ++j) {
+      if (line[j].end == 1) {
+      }
+      else {
+      }
+    }
+    printf("Case #%d: %lld\n", i + 1, ans);
+  }
+  return 0;
+}

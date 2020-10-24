@@ -1,0 +1,10 @@
+#include <iostream>
+
+using namespace std;
+typedef long long ll;
+
+int main() {
+  ll f, d1, d2, d3;
+  
+  return 0;
+}

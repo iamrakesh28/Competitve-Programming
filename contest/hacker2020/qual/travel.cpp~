@@ -1,0 +1,6 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 55;
+char mat[N][N], I[N], O[N];
