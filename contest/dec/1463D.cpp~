@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int t;
+  scanf("%d", &t);
+
+  vector <int> b;
+  vector <bool> x, nx;
+
+  while (t--) {
+    int n;
+    scanf("%d", &n);
+
+    b.resize(n);
+    x.resize(n);
+    nx.resize(n);
+    
+    for (int i = 0; i < n; ++i) {
+      int bi;
+      scanf("%d", &bi);
+      b[i] = bi;
+      x[i] = nx[i] = false;
+    }
+
+    int prev = 1, stock = n;
+    for (int i = 0; i < n; ++i) {
+      while (prev < b[i]) {
+        stock--;
+        prev++;
+      }
+      // stock--;
+      prev = b[i] + 1;
+
+      if (stock > 0) {
+        x[i] = true;
+        stock--;
+      }
+      else
+        break;
+    }
+
+    prev = n << 1, stock = n;
+    for (int i = n - 1; i >= 0; --i) {
+      while (prev > b[i]) {
+        stock--;
+        prev--;
+      }
+      // stock--;
+      prev = b[i] - 1;
+
+      if (stock > 0) {
+        nx[i] = true;
+        stock--;
+      }
+      else
+        break;
+    }
+
+    int cnt = 0;
+
+    for (int i = 0; i <= n; ++i) {
+      if (i == 0) 
+        cnt = (nx[i] ? cnt + 1 : cnt);
+      else if (i == n)
+        cnt = (x[i - 1] ? cnt + 1 : cnt);
+      else
+        cnt = (x[i - 1] && nx[i] ? cnt + 1 : cnt);
+    }
+    
+    printf("%d\n", cnt);
+  }
+  
+  return 0;
+}

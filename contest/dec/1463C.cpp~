@@ -1,0 +1,44 @@
+#include <isotream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int t;
+  scanf("%d", &t);
+
+  vector <int> t, x;
+  
+  while (t--) {
+    int n;
+    scanf("%d", &n);
+
+    t.resize(n);
+    x.resize(n);
+
+    for (int i = 0; i < n; ++i) {
+      int ti, xi;
+      scanf("%d%d", &ti, &xi);
+      t[i] = ti;
+      x[i] = xi;
+    }
+
+    int cnt = 0, pos = 0;
+    long long time = 0;
+
+    for (int i = 0; i < n; ++i) {
+
+      // give successful command
+      if (time <= t[i]) {
+        time += abs(x[i] - pos);
+      }
+      else {
+        pos += ()
+      }
+    }
+
+    printf("%d\n", cnt);
+  }
+  
+  return 0;
+}

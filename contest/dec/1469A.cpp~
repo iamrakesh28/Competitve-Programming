@@ -1,0 +1,9 @@
+#include <isotream>
+
+using namespace std;
+
+char s[105];
+
+int main() {
+  return 0;
+}

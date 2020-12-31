@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+  int n, As = 0;
+  scanf("%d", &n);
+
+  vector <pair <int, int>> glass(n);
+  for (int i = 0; i < n; ++i) {
+    int ai, bi;
+    scanf("%d%d", &ai, &bi);
+    glass[i] = {ai, bi};
+    As += ai;
+  }
+
+  vector < vector < vector <double>>>
+    dp(n + 1, vector < vector <double>> (n + 1, vector <double> (As + 1)));
+  
+  for (int i = 0; i <= n; ++i)
+    for (int k = 0; k <= n; ++k)
+      for (int cap = 0; cap <= As; ++cap) {
+        if (i == 0) {
+          if (k == 0 && cap == 0)
+            dp[i][k][cap] = 0.0;
+          else
+            dp[i][k][cap] = -1;
+          continue;
+        }
+        dp[i][k][cap] = -1;
+
+        if (dp[i - 1][k][cap] > -1)
+          dp[i][k][cap] = dp[i - 1][k][cap] + glass[i - 1].second / 2.0;
+        
+        if (cap >= glass[i - 1].first && k > 0)
+          dp[i][k][cap] = max(dp[i][k][cap], dp[i - 1][k - 1][cap - glass[i - 1].first]
+                              + glass[i - 1].second);
+      }
+
+
+  for (int k = 1; k <= n; ++k) {
+    double ans = 0.0;
+    for (int cap = 0; cap <= As; ++cap)
+      if (dp[n][k][cap] > -1)
+        ans = max(ans, min((double)cap, dp[n][k][cap]));
+    printf("%0.9lf ", ans); 
+  }
+  puts("");
+  return 0;
+}

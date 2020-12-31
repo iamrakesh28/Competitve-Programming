@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector <pair <int, int>> points;
+
+int solveK(int n) {
+  int cur = 0, good = 1;
+  for (int i = 0; i < n; ++i) {
+    if (points[i].second < 0)
+      cur++;
+    else
+      cur--;
+    good = max(good, cur);
+    // cout << cur << endl;
+  }
+  // cout << good << endl;
+  n = n >> 1;
+  return n - good;
+}
+
+int main() {
+  int t;
+  scanf("%d", &t);
+
+  while (t--) {
+    int n;
+    scanf("%d", &n);
+    points.clear();
+    
+    for (int i = 0; i < n; ++i) {
+      int l, r;
+      scanf("%d%d", &l, &r);
+      points.push_back(make_pair(r, 1));
+      points.push_back(make_pair(l, -1));
+      
+    }
+
+    sort(points.begin(), points.end());
+
+    int k = solveK(n << 1);
+
+    printf("%d\n", k);
+  }
+  return 0;
+}
