@@ -1,0 +1,95 @@
+#include <iostream>
+
+typedef long long LL;
+using namespace std;
+
+const int N = 2e5 + 5, BIT = 30;
+const int PRIME = 998244353;
+
+int bit_count[BIT];
+LL factorial[N], zero_sumC[BIT][N], odd_sumC[BIT][N];
+
+LL mod_inverse(LL a, LL n = PRIME - 2) {
+
+  LL r = 1;
+  while (n > 0) {
+    if (n & 1)
+      r = r * a % PRIME;
+    a = a * a % PRIME;
+    n >>= 1;
+  }
+
+  return r;
+}
+
+void preprocess(int n) {
+
+  factorial[0] = 1;
+  for (int i = 1; i <= n; ++i) {
+    factorial[i] = factorial[i - 1] * i % PRIME;
+  }
+
+  nC[0] = 1;
+  for (int i = 1; i <= n; ++i) {
+    nC[i] = factorial[n] * mod_inverse(factorial[i], PRIME - 2) % PRIME;
+    nC[i] = nC[i] * mod_inverse(factorial[n - i], PRIME - 2) % PRIME;
+  }
+
+  for (int i = 0; i < BIT; ++i) {
+    zero_sumC[i][0] = 1;
+    LL num = factorial[bit_count[i]];
+    for (int j = 1; j <= n; ++j) {
+      LL nC = num * mod_inverse(factorial[j]) % PRIME;
+      nC = nC * mod_inverse(factorial[bit_count[i] - j]) % PRIME;
+
+      zero_sumC[i][j] = (zero_sumC[i][j - 1] + nC) % PRIME;
+    }
+  }
+
+  for (int i = 0; i < BIT; ++i) {
+    zero_sumC[i][0] = 1;
+    LL num = factorial[bit_count[i]];
+    for (int j = 1; j <= n; ++j) {
+      LL nC = num * mod_inverse(factorial[j]) % PRIME;
+      nC = nC * mod_inverse(factorial[bit_count[i] - j]) % PRIME;
+
+      zero_sumC[i][j] = (zero_sumC[i][j - 1] + nC) % PRIME;
+    }
+  }
+  
+}
+
+int main() {
+
+  int n, q;
+  scanf("%d", &n);
+
+  for (int i = 0; i < n; ++i) {
+    int ai;
+    scanf("%d", &ai);
+    for (int j = 0; j < BIT; ++j) {
+      if (ai & (1 << j))
+        bit_count[j]++;
+    }
+  }
+  
+  preprocess(n);
+
+  scanf("%d", &q);
+
+  while (q--) {
+    int m;
+    scanf("%d", &m);
+
+    LL carry = 1, ans = 0;
+    for (int j = 0; j < BIT; ++j) {
+      LL prefix = pref_C[m] * carry % PRIME;
+      ans = (ans + prefix) % PRIME;
+      carry <<= 1;
+    }
+
+    printf("%lld\n", ans);
+  }
+  
+  return 0;
+}

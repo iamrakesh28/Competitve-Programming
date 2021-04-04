@@ -1,0 +1,13 @@
+#include <iostream>
+#include <list>
+#include <set>
+
+using namespace std;
+
+const int N = 3e4 + 5;
+list <int> adj[N];
+
+int main() {
+
+  return 0;
+}

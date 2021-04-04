@@ -1,0 +1,13 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+const int N = 1e5 + 5;
+LL d[N];
+
+int main() {
+
+  return 0;
+}

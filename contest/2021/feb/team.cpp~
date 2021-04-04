@@ -1,0 +1,7 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+const int LETTER = 26;
+int same_count[LETTER][LETTER];

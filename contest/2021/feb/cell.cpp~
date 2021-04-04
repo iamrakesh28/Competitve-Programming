@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAX = 20;
+
+int cellToNum(int i, int j, int m) { return i * m + j; }
+
+pair <int, int> numToCell(int num, int m) { return {num / m, num % m}; }
+
+int bfs(int num, int n, int m) {
+}

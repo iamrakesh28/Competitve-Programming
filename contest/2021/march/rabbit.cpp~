@@ -1,0 +1,6 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 305, MAX = 2e6 + 1;
+int G[N][N];

@@ -1,0 +1,12 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int PRIME = 2;
+
+// Assumption : a.size() == b.size() and a.size() is a power of 2
+vector <int> multiply(vector <int> const& a, vector <int> const& b) {
+
+  vector <int> fa(), fb();
+}

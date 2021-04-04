@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 105;
+int a[N];
+
+int main() {
+
+  return 0;
+}
