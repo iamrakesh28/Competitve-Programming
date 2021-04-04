@@ -1,8 +1,0 @@
-#include <iostream>
-#include <algorithm>
-
-using namespace std;
-
-const int N = 205;
-bool stories[N][N], users[N][N];
-int creator[N];

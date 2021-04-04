@@ -1,6 +1,0 @@
-#include <iostream>
-
-using namespace std;
-
-const int N = 505;
-int par[N << 1];
